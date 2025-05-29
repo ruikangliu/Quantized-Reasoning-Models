@@ -6,6 +6,7 @@ from transformers.models.opt.modeling_opt import OPTDecoderLayer
 from transformers.models.llama.modeling_llama import LlamaDecoderLayer, LlamaRMSNorm
 from transformers.models.mistral.modeling_mistral import MistralDecoderLayer, MistralRMSNorm
 from transformers.models.qwen2.modeling_qwen2 import Qwen2DecoderLayer, Qwen2RMSNorm
+from transformers.models.qwen3.modeling_qwen3 import Qwen3DecoderLayer, Qwen3RMSNorm
 from transformers.activations import GELUActivation
 
 from .qmodule import ScaledActivation
@@ -189,7 +190,7 @@ def auto_scale_block(module, module_kwargs,
             inp=input_feat['fc2'],
         ))
 
-    elif isinstance(module, LlamaDecoderLayer) or isinstance(module, MistralDecoderLayer) or isinstance(module, Qwen2DecoderLayer):
+    elif isinstance(module, LlamaDecoderLayer) or isinstance(module, MistralDecoderLayer) or isinstance(module, Qwen2DecoderLayer) or isinstance(module, Qwen3DecoderLayer):
         # attention input
         scales_list.append(_auto_get_scale(
             prev_op=module.input_layernorm,
@@ -387,7 +388,7 @@ def apply_scale(module, scales_list, input_feat_dict=None):
         if isinstance(prev_op, nn.Linear):
             assert len(layers) == 1
             scale_fc_fc(prev_op, layers[0], scales)
-        elif isinstance(prev_op, (nn.LayerNorm, LlamaRMSNorm, MistralRMSNorm, Qwen2RMSNorm)):
+        elif isinstance(prev_op, (nn.LayerNorm, LlamaRMSNorm, MistralRMSNorm, Qwen2RMSNorm, Qwen3RMSNorm)):
             scale_ln_fcs(prev_op, layers, scales)
         elif isinstance(prev_op, (nn.GELU, BloomGelu, GELUActivation)):
             new_module = ScaledActivation(prev_op, scales)

@@ -24,9 +24,11 @@ def get_acts(model, dataset, num_tokens=None, type="linear", keep_seqlen_dim=Fal
     elif type == "block":
         from transformers.models.llama.modeling_llama import LlamaDecoderLayer
         from transformers.models.qwen2.modeling_qwen2 import Qwen2DecoderLayer
+        from transformers.models.qwen3.modeling_qwen3 import Qwen3DecoderLayer
         target_layer_types = [
             LlamaDecoderLayer,
             Qwen2DecoderLayer,
+            Qwen3DecoderLayer,
         ]
     else:
         raise NotImplementedError

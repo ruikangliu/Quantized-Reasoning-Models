@@ -33,6 +33,8 @@ def main():
         model_transformers.save_pretrained(args.save_qmodel_path)
         if isinstance(model, transformers.Qwen2ForCausalLM):
             model.config.architectures = ["Qwen2KVQuantStarForCausalLM"]
+        elif isinstance(model, transformers.Qwen3ForCausalLM):
+            model.config.architectures = ["Qwen3KVQuantStarForCausalLM"]
         elif isinstance(model, transformers.LlamaForCausalLM):
             model.config.architectures = ["LlamaKVQuantStarForCausalLM"]
         else:

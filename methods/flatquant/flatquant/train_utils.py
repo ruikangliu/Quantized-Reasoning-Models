@@ -50,6 +50,7 @@ def cali_flat_quant(args, model, dataloader, dev, logger, start_layer_idx=0):
             cache["i"] += 1
             cache["attention_mask"] = kwargs["attention_mask"]
             cache["position_ids"] = kwargs["position_ids"]
+            cache["position_embeddings"] = kwargs["position_embeddings"]
             raise ValueError
     layers[0] = Catcher(layers[0])
     with torch.no_grad():
@@ -62,6 +63,7 @@ def cali_flat_quant(args, model, dataloader, dev, logger, start_layer_idx=0):
             except ValueError:
                 pass
     position_ids = cache["position_ids"]
+    position_embeddings = cache["position_embeddings"]
     attention_mask = cache["attention_mask"]
     if attention_mask is not None:
         attention_mask_batch = attention_mask.repeat(args.cali_bsz, 1, 1, 1).float()
@@ -99,7 +101,8 @@ def cali_flat_quant(args, model, dataloader, dev, logger, start_layer_idx=0):
         layer.mlp._ori_mode = True
         with torch.no_grad():
             for j in range(args.nsamples):
-                fp_outs[j] = layer(fp_inps[j].unsqueeze(0), attention_mask=attention_mask, position_ids=position_ids)[0]
+                fp_outs[j] = layer(fp_inps[j].unsqueeze(0), attention_mask=attention_mask, position_ids=position_ids,
+                                   position_embeddings=position_embeddings)[0]
         layer.self_attn._ori_mode = False
         layer.mlp._ori_mode = False
         if args.add_diag:
@@ -144,7 +147,8 @@ def cali_flat_quant(args, model, dataloader, dev, logger, start_layer_idx=0):
                 with traincast():
                     for j in range(args.nsamples // args.cali_bsz):
                         index = j * args.cali_bsz
-                        quant_out = layer(fp_inps[index:index+args.cali_bsz,], attention_mask=attention_mask_batch, position_ids=position_ids)[0]
+                        quant_out = layer(fp_inps[index:index+args.cali_bsz,], attention_mask=attention_mask_batch, position_ids=position_ids,
+                                          position_embeddings=position_embeddings)[0]
                         loss = loss_func(fp_outs[index:index+args.cali_bsz,], quant_out)
                         mse += loss.detach().cpu()
                         loss = loss / loss.clone().detach()

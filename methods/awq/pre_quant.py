@@ -10,6 +10,7 @@ from transformers.models.opt.modeling_opt import OPTForCausalLM
 from transformers.models.llama.modeling_llama import LlamaForCausalLM
 from transformers.models.mistral.modeling_mistral import MistralForCausalLM
 from transformers.models.qwen2.modeling_qwen2 import Qwen2ForCausalLM
+from transformers.models.qwen3.modeling_qwen3 import Qwen3ForCausalLM
 
 from .auto_scale import auto_scale_block, apply_scale
 from .auto_clip import auto_clip_block, apply_clip
@@ -25,6 +26,8 @@ def get_blocks(model):
     if model.__class__.__name__ == 'LlamaForCausalLM':
         layers = model.model.layers
     elif isinstance(model, Qwen2ForCausalLM):
+        layers = model.model.layers
+    elif isinstance(model, Qwen3ForCausalLM):
         layers = model.model.layers
     elif isinstance(model, MistralForCausalLM):
         layers = model.model.layers
@@ -49,6 +52,8 @@ def move_embed(model, device):
     if isinstance(model, LlamaForCausalLM):
         model.model.embed_tokens = model.model.embed_tokens.to(device)
     elif isinstance(model, Qwen2ForCausalLM):
+        model.model.embed_tokens = model.model.embed_tokens.to(device)
+    elif isinstance(model, Qwen3ForCausalLM):
         model.model.embed_tokens = model.model.embed_tokens.to(device)
     elif isinstance(model, OPTForCausalLM):
         model.model.decoder.embed_tokens = model.model.decoder.embed_tokens.to(device)

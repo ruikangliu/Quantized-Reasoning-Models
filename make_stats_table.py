@@ -87,7 +87,12 @@ if __name__ == "__main__":
     # read evaluation results from json file
     for model in tqdm(args.models):
         tp = 8 if "70B" in model else 4
-        modelzoo_dir = "./modelzoo/QwQ" if "QwQ" in model else "./modelzoo/DeepSeek-R1"
+        if "QwQ" in model:
+            modelzoo_dir = "./modelzoo/QwQ" 
+        elif "Qwen3" in model:
+            modelzoo_dir = "./modelzoo/Qwen3" 
+        else:
+            modelzoo_dir = "./modelzoo/DeepSeek-R1"
         tokenizer = transformers.AutoTokenizer.from_pretrained(os.path.join(modelzoo_dir, model))
         for method in args.methods:
             if method == '':

@@ -9,6 +9,11 @@ from vllm_custom.model_executor.fake_quantized_models.qwen2_flatquant import Qwe
 from vllm_custom.model_executor.fake_quantized_models.qwen2_kvquant_star import Qwen2KVQuantStarForCausalLM
 from vllm_custom.model_executor.fake_quantized_models.qwen2_quarot_kv import Qwen2QuaRotKVForCausalLM
 from vllm_custom.model_executor.fake_quantized_models.qwen2_quarot import Qwen2QuaRotForCausalLM
+from vllm_custom.model_executor.fake_quantized_models.qwen3_fake_quantized import Qwen3FakeQuantizedForCausalLM
+from vllm_custom.model_executor.fake_quantized_models.qwen3_flatquant import Qwen3FlatQuantForCausalLM
+from vllm_custom.model_executor.fake_quantized_models.qwen3_kvquant_star import Qwen3KVQuantStarForCausalLM
+from vllm_custom.model_executor.fake_quantized_models.qwen3_quarot_kv import Qwen3QuaRotKVForCausalLM
+from vllm_custom.model_executor.fake_quantized_models.qwen3_quarot import Qwen3QuaRotForCausalLM
 
 
 def register_fake_quantized_models():
@@ -22,3 +27,8 @@ def register_fake_quantized_models():
     ModelRegistry.register_model("Qwen2KVQuantStarForCausalLM", Qwen2KVQuantStarForCausalLM)
     ModelRegistry.register_model("Qwen2QuaRotKVForCausalLM", Qwen2QuaRotKVForCausalLM)
     ModelRegistry.register_model("Qwen2QuaRotForCausalLM", Qwen2QuaRotForCausalLM)
+    ModelRegistry.register_model("Qwen3FakeQuantizedForCausalLM", Qwen3FakeQuantizedForCausalLM)
+    ModelRegistry.register_model("Qwen3FlatQuantForCausalLM", Qwen3FlatQuantForCausalLM)
+    ModelRegistry.register_model("Qwen3KVQuantStarForCausalLM", Qwen3KVQuantStarForCausalLM)
+    ModelRegistry.register_model("Qwen3QuaRotKVForCausalLM", Qwen3QuaRotKVForCausalLM)
+    ModelRegistry.register_model("Qwen3QuaRotForCausalLM", Qwen3QuaRotForCausalLM)

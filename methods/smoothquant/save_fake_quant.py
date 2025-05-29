@@ -56,6 +56,8 @@ def main():
         model.save_pretrained(args.save_qmodel_path)
         if isinstance(model, transformers.Qwen2ForCausalLM):
             model.config.architectures = ["Qwen2FakeQuantizedForCausalLM"]
+        elif isinstance(model, transformers.Qwen3ForCausalLM):
+            model.config.architectures = ["Qwen3FakeQuantizedForCausalLM"]
         elif isinstance(model, transformers.LlamaForCausalLM):
             model.config.architectures = ["LlamaFakeQuantizedForCausalLM"]
         else:

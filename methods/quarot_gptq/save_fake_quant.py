@@ -69,6 +69,8 @@ def main():
         if args.rotate:
             if isinstance(model, transformers.Qwen2ForCausalLM):
                 model.config.architectures = ["Qwen2QuaRotForCausalLM"]
+            elif isinstance(model, transformers.Qwen3ForCausalLM):
+                model.config.architectures = ["Qwen3QuaRotForCausalLM"]
             elif isinstance(model, transformers.LlamaForCausalLM):
                 model.config.architectures = ["LlamaQuaRotForCausalLM"]
             else:
@@ -76,6 +78,8 @@ def main():
         elif args.k_bits < 16 or args.v_bits < 16:
             if isinstance(model, transformers.Qwen2ForCausalLM):
                 model.config.architectures = ["Qwen2QuaRotKVForCausalLM"]
+            elif isinstance(model, transformers.Qwen3ForCausalLM):
+                model.config.architectures = ["Qwen3QuaRotKVForCausalLM"]
             elif isinstance(model, transformers.LlamaForCausalLM):
                 model.config.architectures = ["LlamaQuaRotKVForCausalLM"]
             else:

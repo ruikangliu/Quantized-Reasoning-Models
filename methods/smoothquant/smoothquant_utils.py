@@ -9,6 +9,7 @@ from transformers.models.opt.modeling_opt import OPTDecoderLayer
 from transformers.models.bloom.modeling_bloom import BloomBlock
 from transformers.models.llama.modeling_llama import LlamaDecoderLayer, LlamaRMSNorm
 from transformers.models.qwen2.modeling_qwen2 import Qwen2DecoderLayer, Qwen2RMSNorm
+from transformers.models.qwen3.modeling_qwen3 import Qwen3DecoderLayer, Qwen3RMSNorm
 from transformers.models.mistral.modeling_mistral import (
     MistralDecoderLayer,
     MistralRMSNorm,
@@ -104,7 +105,7 @@ def smooth_ln_fcs(ln, fcs, act_scales, alpha=0.5):
 def smooth_ln_fcs_llama_like(ln, fcs, act_scales, alpha=0.5):
     if not isinstance(fcs, list):
         fcs = [fcs]
-    assert isinstance(ln, (LlamaRMSNorm, MistralRMSNorm, MixtralRMSNorm, Qwen2RMSNorm))
+    assert isinstance(ln, (LlamaRMSNorm, MistralRMSNorm, MixtralRMSNorm, Qwen2RMSNorm, Qwen3RMSNorm))
     for fc in fcs:
         assert isinstance(fc, nn.Linear)
         assert ln.weight.numel() == fc.in_features == act_scales.numel()
@@ -178,7 +179,7 @@ def smooth_lm(model, scales, alpha=0.5):
                 )
                 smooth_ln_fcs(attn_ln, qkv, qkv_input_scales, alpha)
                 smooth_ln_fcs(ffn_ln, fc1, fc1_input_scales, alpha)
-        elif isinstance(module, (LlamaDecoderLayer, MistralDecoderLayer, Qwen2DecoderLayer)):
+        elif isinstance(module, (LlamaDecoderLayer, MistralDecoderLayer, Qwen2DecoderLayer, Qwen3DecoderLayer)):
             attn_ln = module.input_layernorm  # attention forward norm
             qkv = [
                 module.self_attn.q_proj,
